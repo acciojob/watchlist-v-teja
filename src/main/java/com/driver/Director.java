@@ -34,7 +34,9 @@ public class Director {
 
     //constructor
     Director(){
-
+    this.name = null;
+    this.numberOfMovies = 0;
+    this.imdbRating = 0.0;
     }
 
     //constructor all args

@@ -34,7 +34,9 @@ public class Movie {
 
     //constructor no args
     Movie(){
-
+        this.name = null;
+        this.durationInMinutes = 0;
+        this.imdbRating= 0.0;
     }
 
     //constructor All args

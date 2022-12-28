@@ -13,20 +13,20 @@ public class MovieController {
     MovieService movieService;
 
     @PostMapping("/movies/add-movie")
-    public ResponseEntity<String> addMovie(@RequestBody() Movie movie){
+    public ResponseEntity<Movie> addMovie(@RequestBody() Movie movie){
 
         boolean temp = movieService.addMovieByBody(movie);
-        if(temp==true){
-            return new ResponseEntity<>("success",HttpStatus.OK);
+        if(temp){
+            return new ResponseEntity<>(movie,HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("movie already exists",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/movies/add-director")
     public ResponseEntity<String> addDirector(@RequestBody() Director director){
         boolean temp = movieService.addDirectorByBody(director);
-        if(temp==true){
+        if(temp){
             return new ResponseEntity<>("success",HttpStatus.OK);
         }
 
@@ -40,7 +40,7 @@ public class MovieController {
             return new ResponseEntity<>("success",HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("Director or Movie Dosent Exits",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Director or Movie Doesn't Exist",HttpStatus.BAD_REQUEST);
 
     }
 
@@ -94,12 +94,6 @@ public class MovieController {
         movieService.deleteAllDirectors();
         return new ResponseEntity<>("all directors and movies by them are deleted",HttpStatus.OK);
     }
-
-
-
-
-
-
 
 
 }
