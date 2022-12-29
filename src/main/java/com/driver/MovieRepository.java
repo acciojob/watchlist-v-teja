@@ -45,8 +45,8 @@ public class MovieRepository {
         return directorSet.get(directorName);
     }
 
-    public List<String> getListFromDB(Director director){
-        return pairSet.get(director);
+    public List<String> getListFromDB(String directorName){
+        return pairSet.get(directorName);
     }
 
     public HashMap<String,Movie> getMovieListFromDB(){

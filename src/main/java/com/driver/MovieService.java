@@ -72,9 +72,9 @@ public class MovieService {
         return null;
     }
 
-    public List<Movie> getListFromPathName(String directorName){
-        Director director = movieRepository.getDirectorFromDB(directorName);
-        List list = movieRepository.getListFromDB(director);
+    public List<String> getListFromPathName(String directorName){
+
+        List list = movieRepository.getListFromDB(directorName);
         return list;
     }
 
