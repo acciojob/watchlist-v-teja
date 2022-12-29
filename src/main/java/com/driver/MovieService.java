@@ -33,24 +33,22 @@ public class MovieService {
         if(!movieRepository.movieSet.containsKey(movieName)){
             return false;
         }
-        Movie movie = movieRepository.getMovieFromDB(movieName);
         if(movieRepository.directorSet.containsKey(directorName)){
-            Director director = movieRepository.getDirectorFromDB(directorName);
-            if(movieRepository.pairSet.containsKey(director)){
-                List<Movie> list = movieRepository.pairSet.get(director);
-                for(Movie temp: list){
-                    if(temp.equals(movie)){
+            if(movieRepository.pairSet.containsKey(directorName)){
+                List<String> list = movieRepository.pairSet.get(directorName);
+                for(String temp: list){
+                    if(temp.equals(movieName)){
                         return false;
                     }
                 }
 
-                        movieRepository.addMovieDirectorToPairSet(director,movie);
+                        movieRepository.addMovieDirectorToPairSet(directorName,movieName);
                         return true;
 
             }else{
-                List<Movie> list  = new ArrayList<>();
-                list.add(movie);
-                movieRepository.pairSet.put(director,list);
+                List<String> list  = new ArrayList<>();
+                list.add(movieName);
+                movieRepository.pairSet.put(directorName,list);
                 return true;
             }
         }
@@ -80,12 +78,11 @@ public class MovieService {
         return list;
     }
 
-    public List<Movie> getAllMovies(){
+    public List<String> getAllMovies(){
         HashMap<String,Movie> map = movieRepository.getMovieListFromDB();
-        List<Movie> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         for(String str: map.keySet()){
-            Movie temp = map.get(str);
-            list.add(temp);
+            list.add(str);
         }
 
         return list;
@@ -99,8 +96,8 @@ public class MovieService {
         return false;
     }
 
-    public void deleteAllDirectors(){
-        movieRepository.deleteAllDirectorsFromDB();
+    public boolean deleteAllDirectors(){
+        return movieRepository.deleteAllDirectorsFromDB();
     }
 
 

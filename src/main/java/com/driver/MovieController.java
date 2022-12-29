@@ -1,10 +1,13 @@
 package com.driver;
 
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import javax.print.DocFlavor;
+import java.util.List;
 
 @RestController
 public class MovieController {
@@ -13,14 +16,14 @@ public class MovieController {
     MovieService movieService;
 
     @PostMapping("/movies/add-movie")
-    public ResponseEntity<Movie> addMovie(@RequestBody() Movie movie){
+    public ResponseEntity<String> addMovie(@RequestBody() Movie movie){
 
         boolean temp = movieService.addMovieByBody(movie);
         if(temp){
-            return new ResponseEntity<>(movie,HttpStatus.OK);
+            return new ResponseEntity<>("success",HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("movie already exists",HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/movies/add-director")
@@ -37,7 +40,7 @@ public class MovieController {
     public ResponseEntity<String>  addMovieDirectorPair(@RequestParam String movieName, String directorName){
         boolean temp = movieService.addMovieDirectorByNames(movieName,directorName);
         if(temp==true){
-            return new ResponseEntity<>("success",HttpStatus.OK);
+            return new ResponseEntity<>("success",HttpStatus.ACCEPTED);
         }
 
         return new ResponseEntity<>("Director or Movie Doesn't Exist",HttpStatus.BAD_REQUEST);
@@ -48,22 +51,22 @@ public class MovieController {
     public ResponseEntity<Movie> getMovieByName(@PathVariable("name") String movieName){
         Movie movie = movieService.getMovieFromPathName(movieName);
         if(movie==null){
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(movie,HttpStatus.OK);
+        return new ResponseEntity<>(movie,HttpStatus.FOUND);
     }
 
     @GetMapping("/movies/get-director-by-name/{name}")
     public ResponseEntity<Director> getDirectorByName(@PathVariable("name") String directorName){
         Director director = movieService.getDirectorFromPathName(directorName);
         if(director==null){
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(director,HttpStatus.OK);
+        return new ResponseEntity<>(director,HttpStatus.FOUND);
     }
 
     @GetMapping("/movies/get-movies-by-director-name/{director}")
-    public ResponseEntity<List<Movie>> getMoviesByDirectorName(@PathVariable("director") String directorName){
+    public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable("director") String directorName){
         Director director = movieService.getDirectorFromPathName(directorName);
         if(director==null){
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
@@ -73,7 +76,7 @@ public class MovieController {
     }
 
     @GetMapping("/movies/get-all-movies")
-    public ResponseEntity<List<Movie>>  findAllMovies(){
+    public ResponseEntity<List<String>>  findAllMovies(){
         List list = movieService.getAllMovies();
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
@@ -91,8 +94,11 @@ public class MovieController {
 
     @DeleteMapping("/movies/delete-all-directors")
     public ResponseEntity<String>  deleteAllDirectors(){
-        movieService.deleteAllDirectors();
-        return new ResponseEntity<>("all directors and movies by them are deleted",HttpStatus.OK);
+        boolean temp = movieService.deleteAllDirectors();
+        if(temp==false){
+            return new ResponseEntity<>("Nothing to delete",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("all directors and movies by them are deleted",HttpStatus.ACCEPTED);
     }
 
 

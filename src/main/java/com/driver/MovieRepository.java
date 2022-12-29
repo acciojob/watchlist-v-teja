@@ -12,7 +12,7 @@ public class MovieRepository {
 
     public HashMap<String,Movie>  movieSet;
     public HashMap<String,Director> directorSet;
-    public HashMap<Director,List<Movie>> pairSet;
+    public HashMap<String,List<String>> pairSet;
 
     MovieRepository(){
         this.movieSet = new HashMap<>();
@@ -30,11 +30,11 @@ public class MovieRepository {
         directorSet.put(key,director);
     }
 
-    public void addMovieDirectorToPairSet(Director director, Movie movie){
+    public void addMovieDirectorToPairSet(String directorName, String movieName){
 
-        List<Movie> list = pairSet.get(director);
-        list.add(movie);
-        pairSet.put(director,list);
+        List<String> list = pairSet.get(directorName);
+        list.add(movieName);
+        pairSet.put(directorName,list);
     }
 
     public Movie getMovieFromDB(String movieName){
@@ -45,7 +45,7 @@ public class MovieRepository {
         return directorSet.get(directorName);
     }
 
-    public List<Movie> getListFromDB(Director director){
+    public List<String> getListFromDB(Director director){
         return pairSet.get(director);
     }
 
@@ -54,20 +54,25 @@ public class MovieRepository {
     }
 
     public void deleteDirectorFromDB(String directorName){
-        Director director = directorSet.get(directorName);
-        directorSet.remove(directorName);
-        if(pairSet.containsKey(director)){
-            for(Movie movie: pairSet.get(director)){
-                movieSet.remove(movie.getName());
+        if(pairSet.containsKey(directorName)){
+            List<String> list = pairSet.get(directorName);
+            for(String movieName: list){
+                movieSet.remove(movieName);
             }
-            pairSet.remove(director);
+            pairSet.remove(directorName);
         }
+        directorSet.remove((directorName));
     }
 
-   public void deleteAllDirectorsFromDB(){
+   public boolean deleteAllDirectorsFromDB(){
+        if(directorSet.isEmpty()){
+            return false;
+        }
+
         for(String str: directorSet.keySet()){
             deleteDirectorFromDB(str);
         }
+        return true;
    }
 
 
