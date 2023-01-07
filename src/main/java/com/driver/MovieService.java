@@ -34,8 +34,8 @@ public class MovieService {
             return false;
         }
         if(movieRepository.directorSet.containsKey(directorName)){
-            if(movieRepository.pairSet.containsKey(directorName)){
-                List<String> list = movieRepository.pairSet.get(directorName);
+            if(movieRepository.movieDirectorSet.containsKey(directorName)){
+                List<String> list = movieRepository.movieDirectorSet.get(directorName);
                 for(String temp: list){
                     if(temp.equals(movieName)){
                         return false;
@@ -48,7 +48,7 @@ public class MovieService {
             }else{
                 List<String> list  = new ArrayList<>();
                 list.add(movieName);
-                movieRepository.pairSet.put(directorName,list);
+                movieRepository.movieDirectorSet.put(directorName,list);
                 return true;
             }
         }
@@ -101,4 +101,7 @@ public class MovieService {
     }
 
 
+    public String getDirectorNameByMovieName(String movieName) {
+        return movieRepository.getDirectorNameByMovieName(movieName);
+    }
 }
